@@ -1,23 +1,27 @@
 package com.company;
 
 public interface AbstractCharacter {
-    void setStrength(int strength);
-    void setIntelligence(int intelligence);
-    void setDexterity(int dexterity);
-    void setDefense(int defense);
-    void setVitality(int vitality);
-    void setWisdom(int wisdom);
-    void setHealth(int health);
-    void setMana(int mana);
+    void setStrength(long strength);
+    void setIntelligence(long intelligence);
+    void setDexterity(long dexterity);
+    void setDefense(long defense);
+    void setVitality(long vitality);
+    void setWisdom(long wisdom);
+    void setHealth(long health);
+    void setMana(long mana);
+    void setXp(long xp);
+    void setLevel(long level);
 
-    int getStrength();
-    int getIntelligence();
-    int getDexterity();
-    int getDefense();
-    int getVitality();
-    int getWisdom();
-    int getHealth();
-    int getMana();
+    long getStrength();
+    long getIntelligence();
+    long getDexterity();
+    long getDefense();
+    long getVitality();
+    long getWisdom();
+    long getHealth();
+    long getMana();
+    long getXp();
+    long getLevel();
     String getRace();
     String getName();
 }
