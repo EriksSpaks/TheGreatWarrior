@@ -2,6 +2,6 @@ package com.company;
 
 public class Ranger extends Character{
     public Ranger(String race, String name) {
-        super(4, 0, 3, 1, 5, 20, 70, 100, race, name);
+        super(2, 0, 4, 1, 1, 1, 10, 0, race, name);
     }
 }

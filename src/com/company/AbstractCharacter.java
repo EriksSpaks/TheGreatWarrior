@@ -11,6 +11,8 @@ public interface AbstractCharacter {
     void setMana(long mana);
     void setXp(long xp);
     void setLevel(long level);
+    void setRace(String race);
+    void setName(String name);
 
     long getStrength();
     long getIntelligence();

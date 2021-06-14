@@ -8,10 +8,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class Main{
 
     //Path to your saves
-    final static String PATH = "C:\\Users\\eriks\\IdeaProjects\\TheGreatWarrior\\Saves\\";
+    final static String SAVESPATH = "C:\\Users\\eriks\\IdeaProjects\\TheGreatWarrior\\Saves\\";
 
     public static void main(String[] args) throws Exception {
         Character character = null;
@@ -22,27 +22,55 @@ public class Main {
         String loadOrNewGame = scanner.nextLine();
         while(true){
             if (loadOrNewGame.equals("a")){
-                loadCharacter(PATH, scanner);
-                break;
+                if (!areSavesEmpty(SAVESPATH)){
+                    character = loadCharacter(SAVESPATH, scanner);
+                    break;
+                }
             }
             if (loadOrNewGame.equals("b")){
                 character = newCharacter(scanner);
+                switch (character.getRace()){
+                    case "Orc":
+                        character.setStrength(character.getStrength() + 3);
+                        character.setVitality(character.getVitality() + 2);
+                        character.setDefense(character.getDefense() - 1);
+                    case "Elf":
+                        character.setIntelligence(character.getIntelligence() + 1);
+                        character.setWisdom(character.getWisdom() + 1);
+                        character.setVitality(character.getVitality() + 1);
+                        character.setDexterity(character.getDexterity() + 1);
+                    case "Human":
+                        character.setDexterity(character.getDexterity() + 2);
+                }
                 break;
             }
             System.out.println("Invalid input, try again!");
             System.out.println("Start a new game or load your character from a save:");
             System.out.println("a: load character      b: new game");
+            loadOrNewGame = scanner.nextLine();
         }
 
         //TODO game logics and game AND rewrite code below normally
         World world = new World();
-        Boolean gameGoes = true;
-        String save = "save game";
-        if(gameGoes == true & loadOrNewGame.equals("b")){
+        boolean gameGoes = true;
+        String save;
+        String quitOrContinue;
+        scanner.nextLine();
+        while (gameGoes){
             //TODO game
-            if (save == "save game"){
-                System.out.println("Yes");
-                saveGame(character, world, PATH);
+
+            //TODO game
+            System.out.println("Do you want to save game?");
+            System.out.println("a: yes     b: no");
+            save = scanner.nextLine();
+            if (save.equals("a")){
+                saveGame(character, world, SAVESPATH);
+            }
+            System.out.println("Dou wou want to continue or quit the game?");
+            System.out.println("a: continue     b: quit");
+            quitOrContinue = scanner.nextLine();
+            if (quitOrContinue.equals("b")){
+                gameGoes = false;
             }
             world.setDay(world.getDay() + 1);
         }
@@ -64,6 +92,8 @@ public class Main {
         jsonObject.put("level", character.getLevel());
         jsonObject.put("xp", character.getXp());
         jsonObject.put("world day", world.getDay());
+        jsonObject.put("name", character.getName());
+        jsonObject.put("race", character.getRace());
 
         PrintWriter pw = new PrintWriter(PATH);
         pw.write(jsonObject.toJSONString());
@@ -71,7 +101,25 @@ public class Main {
         pw.close();
     }
 
-    public static void loadCharacter(String path, Scanner scanner) throws IOException, ParseException, NullPointerException {
+    public static boolean areSavesEmpty(String path){
+        String[] pathNames;
+        File f = new File(path);
+        FilenameFilter filter = (f1, name) -> name.endsWith(".json");
+
+        pathNames = f.list(filter);
+        ArrayList<String> name = new ArrayList<>();
+
+        for (String pathname : pathNames) {
+            name.add(pathname);
+        }
+        if (name.isEmpty()){
+            System.out.println("There are no saves in saves directory");
+            return true;
+        }
+        return false;
+    }
+
+    public static Character loadCharacter(String path, Scanner scanner) throws IOException, ParseException, NullPointerException {
         String[] pathNames;
         File f = new File(path);
         FilenameFilter filter = (f1, name) -> name.endsWith(".json");
@@ -106,8 +154,11 @@ public class Main {
         character.setVitality((long) jsonObject.get("vitality"));
         character.setWisdom((long) jsonObject.get("wisdom"));
         character.setXp((long) jsonObject.get("xp"));
+        character.setRace((String) jsonObject.get("race"));
+        character.setName((String) jsonObject.get("name"));
         world.setDay((long) jsonObject.get("world day"));
-        //TODO character.setRace and setName
+
+        return character;
     }
 
     public static void printSaveFiles(ArrayList<String> arrayList){
@@ -128,6 +179,9 @@ public class Main {
             System.out.println("Choose your characters race: ");
             System.out.println("a: Human    b: Orc     c: Elf");
             race = scanner.nextLine();
+            if (race.equals("a") | race.equals("b") | race.equals("c")){
+                break;
+            }
         }
         switch(race){
             case "a":
@@ -147,7 +201,7 @@ public class Main {
             System.out.println("Invalid input. Try again: ");
             System.out.println("Choose your characters class: ");
             System.out.println("a: Warrior    b: Ranger     c: Mage");
-            race = scanner.nextLine();
+            classification = scanner.nextLine();
         }
 
         switch(classification){

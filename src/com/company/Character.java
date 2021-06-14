@@ -69,6 +69,14 @@ public abstract class Character implements AbstractCharacter{
         this.mana = mana;
     }
 
+    public void setRace(String race) {
+        this.race = race;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public long getStrength() {
         return strength;
     }
