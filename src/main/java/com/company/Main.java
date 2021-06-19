@@ -1,10 +1,7 @@
 package com.company;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,15 +12,17 @@ public class Main{
 
     public static void main(String[] args) throws Exception {
         Character character = null;
+        Game game = new Game();
         System.out.println("Start a new game or load your character from a save:");
-        System.out.println("a: load character      b: new game");
+        System.out.println("a: load character      b: new character");
         //TODO Start game before new character
         Scanner scanner = new Scanner(System.in);
         String loadOrNewGame = scanner.nextLine();
         while(true){
             if (loadOrNewGame.equals("a")){
                 if (!areSavesEmpty(SAVESPATH)){
-                    character = loadCharacter(SAVESPATH, scanner);
+                    character = game.loadCharacter(SAVESPATH, scanner);
+                    character.setInventory(game.loadInventory(SAVESPATH, character));
                     break;
                 }
             }
@@ -34,13 +33,16 @@ public class Main{
                         character.setStrength(character.getStrength() + 3);
                         character.setVitality(character.getVitality() + 2);
                         character.setDefense(character.getDefense() - 1);
+                        break;
                     case "Elf":
                         character.setIntelligence(character.getIntelligence() + 1);
                         character.setWisdom(character.getWisdom() + 1);
                         character.setVitality(character.getVitality() + 1);
                         character.setDexterity(character.getDexterity() + 1);
+                        break;
                     case "Human":
                         character.setDexterity(character.getDexterity() + 2);
+                        break;
                 }
                 break;
             }
@@ -55,50 +57,24 @@ public class Main{
         boolean gameGoes = true;
         String save;
         String quitOrContinue;
-        scanner.nextLine();
         while (gameGoes){
             //TODO game
 
             //TODO game
-            System.out.println("Do you want to save game?");
+            System.out.println("Do you want to save game?(every input except 'a' will automatically continue the game without saving it)");
             System.out.println("a: yes     b: no");
             save = scanner.nextLine();
             if (save.equals("a")){
-                saveGame(character, world, SAVESPATH);
+                game.saveGame(character, world, SAVESPATH);
             }
-            System.out.println("Dou wou want to continue or quit the game?");
+            System.out.println("Do you want to continue or quit the game?(every input except 'a', will quit the game)");
             System.out.println("a: continue     b: quit");
             quitOrContinue = scanner.nextLine();
-            if (quitOrContinue.equals("b")){
+            if (!quitOrContinue.equals("a")){
                 gameGoes = false;
             }
             world.setDay(world.getDay() + 1);
         }
-    }
-
-    public static void saveGame(Character character, World world, String path) throws FileNotFoundException {
-        //Create path to your saves!
-        final String PATH = path + character.getName() + ".json";
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("strength", character.getStrength());
-        jsonObject.put("intelligence", character.getIntelligence());
-        jsonObject.put("dexterity", character.getDexterity());
-        jsonObject.put("defense", character.getDefense());
-        jsonObject.put("vitality", character.getVitality());
-        jsonObject.put("wisdom", character.getWisdom());
-        jsonObject.put("health", character.getHealth());
-        jsonObject.put("mana", character.getMana());
-        jsonObject.put("level", character.getLevel());
-        jsonObject.put("xp", character.getXp());
-        jsonObject.put("world day", world.getDay());
-        jsonObject.put("name", character.getName());
-        jsonObject.put("race", character.getRace());
-
-        PrintWriter pw = new PrintWriter(PATH);
-        pw.write(jsonObject.toJSONString());
-        pw.flush();
-        pw.close();
     }
 
     public static boolean areSavesEmpty(String path){
@@ -117,55 +93,6 @@ public class Main{
             return true;
         }
         return false;
-    }
-
-    public static Character loadCharacter(String path, Scanner scanner) throws IOException, ParseException, NullPointerException {
-        String[] pathNames;
-        File f = new File(path);
-        FilenameFilter filter = (f1, name) -> name.endsWith(".json");
-
-        pathNames = f.list(filter);
-        ArrayList<String> name = new ArrayList<>();
-
-        for (String pathname : pathNames) {
-            name.add(pathname);
-        }
-        printSaveFiles(name);
-        int characterNumber = scanner.nextInt();
-        while (characterNumber > name.size()){
-            System.out.println("Invalid input, try again!");
-            printSaveFiles(name);
-            characterNumber = Integer.parseInt(scanner.nextLine());
-        }
-
-        Character character = new Warrior("Human", name.get(characterNumber-1).replace(".json", ""));
-        World world = new World();
-
-        Object obj = new JSONParser().parse(new FileReader(path + name.get(characterNumber-1)));
-        JSONObject jsonObject = (JSONObject) obj;
-
-        character.setLevel((long) jsonObject.get("level"));
-        character.setIntelligence((long) jsonObject.get("intelligence"));
-        character.setDefense((long) jsonObject.get("defense"));
-        character.setDexterity((long) jsonObject.get("dexterity"));
-        character.setHealth((long) jsonObject.get("health"));
-        character.setMana((long) jsonObject.get("mana"));
-        character.setStrength((long) jsonObject.get("strength"));
-        character.setVitality((long) jsonObject.get("vitality"));
-        character.setWisdom((long) jsonObject.get("wisdom"));
-        character.setXp((long) jsonObject.get("xp"));
-        character.setRace((String) jsonObject.get("race"));
-        character.setName((String) jsonObject.get("name"));
-        world.setDay((long) jsonObject.get("world day"));
-
-        return character;
-    }
-
-    public static void printSaveFiles(ArrayList<String> arrayList){
-        System.out.println("Choose your character: ");
-        for (int i = 0; i < arrayList.size(); i++){
-            System.out.println(i+1 + ": " + arrayList.get(i).replace(".json", ""));
-        }
     }
 
     public static Character newCharacter(Scanner scanner) throws Exception{
@@ -206,11 +133,11 @@ public class Main{
 
         switch(classification){
             case "a":
-                return new Warrior(race, name);
+                return new Warrior(race, name, "Warrior");
             case "b":
-                return new Ranger(race, name);
+                return new Ranger(race, name, "Ranger");
             case "c":
-                return new Mage(race, name);
+                return new Mage(race, name, "Mage");
             default:
                 throw new Exception();
         }
