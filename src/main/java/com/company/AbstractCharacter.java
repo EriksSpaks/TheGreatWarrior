@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public interface AbstractCharacter {
     void setStrength(long strength);
     void setIntelligence(long intelligence);
-    void setDexterity(long dexterity);
     void setDefense(long defense);
     void setVitality(long vitality);
     void setWisdom(long wisdom);
@@ -17,10 +16,10 @@ public interface AbstractCharacter {
     void setName(String name);
     void setClassification(String classification);
     void setInventory(ArrayList<String> inventory);
+    void setXpToNextLvl(long xpToNextLvl);
 
     long getStrength();
     long getIntelligence();
-    long getDexterity();
     long getDefense();
     long getVitality();
     long getWisdom();
@@ -32,4 +31,6 @@ public interface AbstractCharacter {
     String getRace();
     String getName();
     String getClassification();
+    long getXpToNextLvl();
+
 }

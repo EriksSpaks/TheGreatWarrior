@@ -1,19 +1,19 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public abstract class Character implements AbstractCharacter{
     //Attributes
     private long strength;           // Attack strength
     private long intelligence;       // Magic attack strength
-    private long dexterity;          // Attack speed
     private long defense;            // Armor
     private long vitality;           // Health regeneration speed
     private long wisdom;             // Mana regeneration speed
     private long health;
     private long mana;
-    private long level = 0;
+    private long level = 1;
     private long xp = 0;
     //Parameters
     private String race;            // Human, Orc, Elf
@@ -21,13 +21,13 @@ public abstract class Character implements AbstractCharacter{
     private String classification;
     //inventory
     private ArrayList<String> inventory = new ArrayList<>();
-    //
+    //additional variables
     private boolean trainingCompleted = false;
+    private long xpToNextLvl = 200;
 
-    public Character(long strength, long intelligence, long dexterity, long defense, long vitality, long wisdom, long health, long mana, String race, String name, String classification) {
+    public Character(long strength, long intelligence, long defense, long vitality, long wisdom, long health, long mana, String race, String name, String classification) {
         this.strength = strength;
         this.intelligence = intelligence;
-        this.dexterity = dexterity;
         this.defense = defense;
         this.vitality = vitality;
         this.wisdom = wisdom;
@@ -49,96 +49,246 @@ public abstract class Character implements AbstractCharacter{
          * iron sword: strength + 2 + character level + 1
          * gold sword: strength + 3 + character level + 3
          * legendary sword: strength + 5 + character level + defense level + 5
-         * По умолчанию сначала "wooden sword" у всех персонажей 1 уровня
          */
-        int countWS = 0;
-        int countBS = 0;
-        int countIS = 0;
-        int countGS = 0;
+        int countWSword = 0;
+        int countBSword = 0;
+        int countISword = 0;
+        int countGSword = 0;
+        int countWBow = 0;
+        int countBBow = 0;
+        int countIBow = 0;
+        int countGBow = 0;
+        int countWWand = 0;
+        int countBWand = 0;
+        int countIWand = 0;
+        int countGWand = 0;
         for (String item : inventory){
             switch (item){
                 case "wooden sword":
-                countWS++;
+                    countWSword++;
                     break;
                 case "bronze sword":
-                    countBS++;
+                    countBSword++;
                     break;
                 case "iron sword":
-                    countIS++;
+                    countISword++;
                     break;
                 case "gold sword":
-                    countGS++;
+                    countGSword++;
+                    break;
+                case "wooden bow":
+                    countWBow++;
+                    break;
+                case "bronze bow":
+                    countBBow++;
+                    break;
+                case "iron bow":
+                    countIBow++;
+                    break;
+                case "gold bow":
+                    countGBow++;
+                    break;
+                case "wooden wand":
+                    countWWand++;
+                    break;
+                case "bronze wand":
+                    countBWand++;
+                    break;
+                case "iron wand":
+                    countIWand++;
+                    break;
+                case "gold wand":
+                    countGWand++;
                     break;
             }
         }
-        if (countWS >= 10){
+        if (countWSword >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("wooden sword");
             }
             inventory.add("bronze sword");
         }
-        if (countBS >= 10){
+        if (countBSword >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("bronze sword");
             }
             inventory.add("iron sword");
         }
-        if (countIS >= 10){
+        if (countISword >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("iron sword");
             }
             inventory.add("gold sword");
         }
-        if (countGS >= 10){
+        if (countGSword >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("gold sword");
             }
             inventory.add("legendary sword");
             System.out.println("Congrats! You just made legendary sword!");
         }
+        if (countWBow >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("wooden bow");
+            }
+            inventory.add("bronze bow");
+        }
+        if (countBBow >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("bronze bow");
+            }
+            inventory.add("iron bow");
+        }
+        if (countIBow >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("iron bow");
+            }
+            inventory.add("gold bow");
+        }
+        if (countGBow >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("gold bow");
+            }
+            inventory.add("legendary bow");
+            System.out.println("Congrats! You just made legendary bow!");
+        }
+        if (countWWand >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("wooden wand");
+            }
+            inventory.add("bronze wand");
+        }
+        if (countBWand >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("bronze wand");
+            }
+            inventory.add("iron wand");
+        }
+        if (countIWand >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("iron wand");
+            }
+            inventory.add("gold wand");
+        }
+        if (countGWand >= 10){
+            for (int i = 0; i < 10; i++){
+                inventory.remove("gold wand");
+            }
+            inventory.add("legendary wand");
+            System.out.println("Congrats! You just made legendary wand!");
+        }
     }
 
-    public void fight(Character enemy){
+    public void fight(Character enemy, Scanner scanner){
+        int variable = 0;
         long maxHealth = this.getHealth();
+        String choiceToFight = null;
         while (this.getHealth() != 0 | enemy.getHealth() != 0){
             //TODO fight mechanics with abilities and skills
-            if (this.getRace().equals("Mage")){
-                enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getIntelligence());
-            } else {
-                enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getStrength());
+            if (variable % 2 == 0) {
+                System.out.println("Choose: \n a: defense     b: attack");
+                choiceToFight = scanner.nextLine();
+                switch (choiceToFight) {
+                    case "b":
+                        if (this.getRace().equals("Mage")) {
+                            enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getIntelligence());
+                        } else {
+                            enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getStrength());
+                        }
+                        break;
+                    case "a":
+                        if (this.getDefense() + 2 < enemy.getStrength() | this.getDefense() + 2 < enemy.getIntelligence()) {
+                            if (enemy.getRace().equals("Mage")) {
+                                this.setHealth(this.getHealth() + this.getDefense() + 2 - enemy.getIntelligence());
+                            } else {
+                                this.setHealth(this.getHealth() + this.getDefense() + 2 - enemy.getStrength());
+                            }
+                        } else if (this.getDefense() < enemy.getStrength() | this.getDefense() < enemy.getIntelligence()) {
+                            if (enemy.getRace().equals("Mage")) {
+                                this.setHealth(this.getHealth() + this.getDefense() + 1 - enemy.getIntelligence());
+                            } else {
+                                this.setHealth(this.getHealth() + this.getDefense() + 1 - enemy.getStrength());
+                            }
+                        }
+                        break;
+                    default:
+                        System.out.println("You typed wrong, automatically turning your move to enemy...");
+                        break;
+                }
             }
-            if (enemy.getHealth() <= 0 ){
+
+            if (enemy.getHealth() <= 0 & this.getHealth() > 0){
                 System.out.println("You won the fight!");
-                // TODO: 6/19/2021 xp earning
-                System.out.println("You earned" + (50*enemy.getLevel())/2 + "xp");
+                if (enemy.getLevel() > this.getLevel()){
+                    System.out.println("You earned" + 50*enemy.getLevel() + "xp");
+                    this.setXp(this.getXp() + 50 * enemy.getLevel());
+                } else if (enemy.getLevel() == this.getLevel()){
+                    System.out.println("You earned" + 25*enemy.getLevel() + "xp");
+                    this.setXp(this.getXp() + 25 * enemy.getLevel());
+                } else if (enemy.getLevel() < this.getLevel()){
+                    System.out.println("You earned" + 10*enemy.getLevel() + "xp");
+                    this.setXp(this.getXp() + 10 * enemy.getLevel());
+                }
+                this.openCase();
+            } else if (this.getHealth() <= 0 & enemy.getHealth() > 0){
+                System.out.println("You lost!");
+                System.out.println("You earned " + 5*enemy.getLevel() + "xp");
+                this.setXp(this.getXp() + 5 * enemy.getLevel());
             }
+
+            if (variable % 2 != 0){
+                if (enemy.getRace().equals("Mage")){
+                    this.setHealth(this.getHealth() + this.getDefense() - enemy.getIntelligence());
+                } else {
+                    this.setHealth(this.getHealth() + this.getDefense() - enemy.getStrength());
+                }
+            } else if (!choiceToFight.equals("a") & !choiceToFight.equals("b")){
+                if (enemy.getRace().equals("Mage")){
+                    this.setHealth(this.getHealth() + this.getDefense() - (enemy.getIntelligence() + 1));
+                } else {
+                    this.setHealth(this.getHealth() + this.getDefense() - (enemy.getStrength() + 1));
+                }
+            }
+
+            variable++;
         }
         this.setHealth(maxHealth);
     }
 
+    public void openCase(){
+        Random random = new Random();
+        int randChance = random.nextInt(100) + 1;
+        if (this.getLevel() <= 15){
+            if (randChance <= 85) this.getInventory().add("wooden sword");                      //85%
+            if (randChance > 85 & randChance <= 92) this.getInventory().add("bronze sword");    //7%
+            if (randChance > 92 & randChance <= 97) this.getInventory().add("iron sword");      //5%
+            if (randChance > 97) this.getInventory().add("gold sword");                         //3%
+        }
+    }
 
     public void training(){
-//        if (trainingCompleted){
-//            System.out.println("You can train only once per level!");
-//            return;
-//        }
+        if (trainingCompleted){
+            System.out.println("You can train only once per level!");
+            return;
+        }
         Scanner scanner = new Scanner(System.in);
         //train only once every level, not every day to become imbalance
         System.out.println("What do you want to train? Remember, you can only train once every level!");
-        System.out.println("a:  Strength     b:  defense    c: dexterity    d: intelligence(only if you are mage)");
+        System.out.println("a:  Strength     b:  defense    c: intelligence(only if you are mage)");
         String trainingType = scanner.nextLine();
-        while (!trainingType.equals("a") & !trainingType.equals("b") & !trainingType.equals("c") & !trainingType.equals("d")){
+        while (!trainingType.equals("a") & !trainingType.equals("b") & !trainingType.equals("c")){
             System.out.println("Invalid input! Try again:");
             System.out.println("What do you want to train? Remember, you can only train once every level!");
-            System.out.println("a:  Strength     b:  defense    c: dexterity    d: intelligence");
+            System.out.println("a:  Strength     b:  defense    c: intelligence");
             trainingType = scanner.nextLine();
         }
         switch (trainingType){
             case "a":
-                //if ypu want to train strength(if you are not mage)
+                //if you want to train strength(if you are not mage)
                 if (!this.getRace().equals("Mage")) {
                     this.setStrength(this.getStrength() + 1);
-                    this.setXp(this.getXp() + 1);
+                    this.setXp(this.getXp() + (this.getLevel())*20);
+                    break;
                 } else {
                     System.out.println("You cannot train strength as mage!");
                     training();
@@ -146,16 +296,14 @@ public abstract class Character implements AbstractCharacter{
             case "b":
                 //if tou want to train defense
                 this.setDefense(this.getDefense() + 1);
-                this.setXp(this.getXp() + 1);
+                this.setXp(this.getXp() + (this.getLevel())*20);
+                break;
             case "c":
-                //if you want to train dexterity
-                this.setDexterity(this.getDexterity() + 1);
-                this.setXp(this.getXp() + 1);
-            case "d":
                 //if you want to train intelligence
                 if (this.getRace().equals("Mage")) {
                     this.setIntelligence(this.getIntelligence() + 1);
-                    this.setXp(this.getXp() + 5);
+                    this.setXp(this.getXp() + (this.getLevel())*20);
+                    break;
                 } else {
                     System.out.println("You can only train intelligence as mage");
                     training();
@@ -164,18 +312,21 @@ public abstract class Character implements AbstractCharacter{
         trainingCompleted = true;
     }
 
-    public void lvlUp(int xpToNext){
+    public void lvlUp(long xpToNext){
         this.setLevel(this.getLevel() + 1);
-        this.setXp(this.getXp() - xpToNext);
-        this.setHealth(this.getHealth() + 5);
-        this.setStrength(this.getStrength() + 1);
+        this.setXp(this.getXp() - this.getXpToNextLvl());
+        this.setHealth(this.getHealth() + 2);
         this.setDefense(this.getDefense() + 1);
+        if (!this.getRace().equals("Mage")){
+            this.setStrength(this.getStrength() + 1);
+        } else {
+            this.setIntelligence(this.getIntelligence() + 1);
+        }
+        this.setXpToNextLvl(this.getXpToNextLvl()+200);
         trainingCompleted = false;
-        System.out.println("Level up! Now you have +1 Strength, +5 health and +1 defense");
-    }
-
-    public ArrayList<String> getInventory() {
-        return inventory;
+        if (xpToNext != 0){
+            System.out.println("Level up! You are now at " + this.getLevel() + " level" + "\nNow you have +1 Strength, +5 health and +1 defense");
+        }
     }
 
     public void setInventory(ArrayList<String> inventory) {
@@ -196,10 +347,6 @@ public abstract class Character implements AbstractCharacter{
 
     public void setIntelligence(long intelligence) {
         this.intelligence = intelligence;
-    }
-
-    public void setDexterity(long dexterity) {
-        this.dexterity = dexterity;
     }
 
     public void setDefense(long defense) {
@@ -234,16 +381,16 @@ public abstract class Character implements AbstractCharacter{
         this.classification = classification;
     }
 
+    public void setXpToNextLvl(long xpToNextLvl) {
+        this.xpToNextLvl = xpToNextLvl;
+    }
+
     public long getStrength() {
         return strength;
     }
 
     public long getIntelligence() {
         return intelligence;
-    }
-
-    public long getDexterity() {
-        return dexterity;
     }
 
     public long getDefense() {
@@ -284,5 +431,13 @@ public abstract class Character implements AbstractCharacter{
 
     public String getClassification() {
         return classification;
+    }
+
+    public ArrayList<String> getInventory() {
+        return inventory;
+    }
+
+    public long getXpToNextLvl() {
+        return xpToNextLvl;
     }
 }
