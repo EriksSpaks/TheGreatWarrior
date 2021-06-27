@@ -264,6 +264,36 @@ public abstract class Character implements AbstractCharacter{
             if (randChance > 92 & randChance <= 97) this.getInventory().add("iron sword");      //5%
             if (randChance > 97) this.getInventory().add("gold sword");                         //3%
         }
+        if (this.getLevel() >= 16 & this.getLevel() <= 30){
+            if (randChance <= 50) this.getInventory().add("wooden sword");                      //50%
+            if (randChance > 50 & randChance <= 80) this.getInventory().add("bronze sword");    //30%
+            if (randChance > 80 & randChance <= 95) this.getInventory().add("iron sword");      //15%
+            if (randChance > 95) this.getInventory().add("gold sword");                         //5%
+        }
+        if (this.getLevel() >= 31 & this.getLevel() <= 45){
+            if (randChance <= 30) this.getInventory().add("wooden sword");                      //30%
+            if (randChance > 30 & randChance <= 70) this.getInventory().add("bronze sword");    //40%
+            if (randChance > 70 & randChance <= 90) this.getInventory().add("iron sword");      //20%
+            if (randChance > 90) this.getInventory().add("gold sword");                         //10%
+        }
+        if (this.getLevel() >= 46 & this.getLevel() <= 60){
+            if (randChance <= 15) this.getInventory().add("wooden sword");                      //15%
+            if (randChance > 15 & randChance <= 61) this.getInventory().add("bronze sword");    //46%
+            if (randChance > 61 & randChance <= 87) this.getInventory().add("iron sword");      //26%
+            if (randChance > 87) this.getInventory().add("gold sword");                         //13%
+        }
+        if (this.getLevel() >= 61 & this.getLevel() <= 75){
+            if (randChance <= 5) this.getInventory().add("wooden sword");                      //5%
+            if (randChance > 5 & randChance <= 55) this.getInventory().add("bronze sword");    //50%
+            if (randChance > 55 & randChance <= 85) this.getInventory().add("iron sword");     //30%
+            if (randChance > 85) this.getInventory().add("gold sword");                        //15%
+        }
+        if (this.getLevel() >= 76 & this.getLevel() <= 100){
+            if (randChance <= 1) this.getInventory().add("wooden sword");                      //1%
+            if (randChance > 1 & randChance <= 36) this.getInventory().add("bronze sword");    //35%
+            if (randChance > 36 & randChance <= 71) this.getInventory().add("iron sword");     //35%
+            if (randChance > 71) this.getInventory().add("gold sword");                        //29%
+        }
     }
 
     public void training(){
