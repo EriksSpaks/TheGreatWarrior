@@ -24,6 +24,11 @@ public abstract class Character implements AbstractCharacter{
     //additional variables
     private boolean trainingCompleted = false;
     private long xpToNextLvl = 200;
+    //all possible inventory items
+    private final String[] invItems =
+            {"wooden sword", "bronze sword", "iron sword", "gold sword",
+            "wooden bow", "bronze bow", "iron bow", "gold bow",
+            "wooden wand", "bronze wand", "iron wand", "gold wand"};
 
     public Character(long strength, long intelligence, long defense, long vitality, long wisdom, long health, long mana, String race, String name, String classification) {
         this.strength = strength;
@@ -38,8 +43,77 @@ public abstract class Character implements AbstractCharacter{
         this.classification = classification;
     }
 
+    public int[] checkInventory(int needToPrint){
+        int[] itemCount = new int[12];
+        int itemsToUpgrade = 0;
+        Scanner scanner = new Scanner(System.in);
+        for (String item : inventory){
+            switch (item){
+                case "wooden sword":
+                    itemCount[0]++;
+                    break;
+                case "bronze sword":
+                    itemCount[1]++;
+                    break;
+                case "iron sword":
+                    itemCount[2]++;
+                    break;
+                case "gold sword":
+                    itemCount[3]++;
+                    break;
+                case "wooden bow":
+                    itemCount[4]++;
+                    break;
+                case "bronze bow":
+                    itemCount[5]++;
+                    break;
+                case "iron bow":
+                    itemCount[6]++;
+                    break;
+                case "gold bow":
+                    itemCount[7]++;
+                    break;
+                case "wooden wand":
+                    itemCount[8]++;
+                    break;
+                case "bronze wand":
+                    itemCount[9]++;
+                    break;
+                case "iron wand":
+                    itemCount[10]++;
+                    break;
+                case "gold wand":
+                    itemCount[11]++;
+                    break;
+            }
+        }
+
+        if (needToPrint == 1){
+            for (int i = 0; i < itemCount.length; i++) {
+                if (itemCount[i] > 0){
+                    System.out.println("\n" + invItems[i] + " x " + itemCount[i] + "\n");
+                }
+                if (itemCount[i] >= 10){
+                    itemsToUpgrade++;
+                }
+            }
+        }
+        if (itemsToUpgrade > 0){
+            System.out.println("You have some items to upgrade");
+            System.out.println("Do you want to upgrade them?");
+            System.out.println("a: yes    b: no");
+            String yesOrNo = scanner.nextLine();
+            switch (yesOrNo){
+                case "a":
+                    this.itemUpgrade();
+                default:
+                    break;
+            }
+        }
+        return itemCount;
+    }
+
     public void itemUpgrade(){
-        // TODO: 6/19/2021 item upgrade mechanics and save/load inventory methods(with xml files)
         /*
          * Если 10 одинаковых мечей(или волшебных палочек если маг) в инвентаре, то можно превратить их в улучшенную версию этого меча(палочки если маг)
          * 10 x wooden sword -> 1 bronze sword; 10 x bronze sword -> 1 iron sword; 10 iron sword -> 1 gold sword; 10 x gold sword -> 1 legendary sword
@@ -50,127 +124,77 @@ public abstract class Character implements AbstractCharacter{
          * gold sword: strength + 3 + character level + 3
          * legendary sword: strength + 5 + character level + defense level + 5
          */
-        int countWSword = 0;
-        int countBSword = 0;
-        int countISword = 0;
-        int countGSword = 0;
-        int countWBow = 0;
-        int countBBow = 0;
-        int countIBow = 0;
-        int countGBow = 0;
-        int countWWand = 0;
-        int countBWand = 0;
-        int countIWand = 0;
-        int countGWand = 0;
-        for (String item : inventory){
-            switch (item){
-                case "wooden sword":
-                    countWSword++;
-                    break;
-                case "bronze sword":
-                    countBSword++;
-                    break;
-                case "iron sword":
-                    countISword++;
-                    break;
-                case "gold sword":
-                    countGSword++;
-                    break;
-                case "wooden bow":
-                    countWBow++;
-                    break;
-                case "bronze bow":
-                    countBBow++;
-                    break;
-                case "iron bow":
-                    countIBow++;
-                    break;
-                case "gold bow":
-                    countGBow++;
-                    break;
-                case "wooden wand":
-                    countWWand++;
-                    break;
-                case "bronze wand":
-                    countBWand++;
-                    break;
-                case "iron wand":
-                    countIWand++;
-                    break;
-                case "gold wand":
-                    countGWand++;
-                    break;
-            }
-        }
-        if (countWSword >= 10){
+        int[] countItems = checkInventory(0);
+
+        if (countItems[0] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("wooden sword");
             }
             inventory.add("bronze sword");
         }
-        if (countBSword >= 10){
+        if (countItems[1] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("bronze sword");
             }
             inventory.add("iron sword");
         }
-        if (countISword >= 10){
+        if (countItems[2] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("iron sword");
             }
             inventory.add("gold sword");
         }
-        if (countGSword >= 10){
+        if (countItems[3] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("gold sword");
             }
             inventory.add("legendary sword");
             System.out.println("Congrats! You just made legendary sword!");
         }
-        if (countWBow >= 10){
+        if (countItems[4] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("wooden bow");
             }
             inventory.add("bronze bow");
         }
-        if (countBBow >= 10){
+        if (countItems[5] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("bronze bow");
             }
             inventory.add("iron bow");
         }
-        if (countIBow >= 10){
+        if (countItems[6] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("iron bow");
             }
             inventory.add("gold bow");
         }
-        if (countGBow >= 10){
+        if (countItems[7] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("gold bow");
             }
             inventory.add("legendary bow");
             System.out.println("Congrats! You just made legendary bow!");
         }
-        if (countWWand >= 10){
+        if (countItems[8] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("wooden wand");
             }
             inventory.add("bronze wand");
         }
-        if (countBWand >= 10){
+        if (countItems[9] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("bronze wand");
             }
             inventory.add("iron wand");
         }
-        if (countIWand >= 10){
+        if (countItems[10] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("iron wand");
             }
             inventory.add("gold wand");
         }
-        if (countGWand >= 10){
+        if (countItems[11] >= 10){
             for (int i = 0; i < 10; i++){
                 inventory.remove("gold wand");
             }
@@ -184,39 +208,14 @@ public abstract class Character implements AbstractCharacter{
         long maxHealth = this.getHealth();
         String choiceToFight = null;
         while (this.getHealth() != 0 | enemy.getHealth() != 0){
+            System.out.println("Your health: " + this.getHealth() + "\nEnemy's health: " + enemy.getHealth() + "\n");
+            Random random = new Random();
+            int critChance =  random.nextInt(10);
+            critChance++;
+            Random randomEnemy = new Random();
+            int enemyCritChance =  randomEnemy.nextInt(10);
+            enemyCritChance++;
             //TODO fight mechanics with abilities and skills
-            if (variable % 2 == 0) {
-                System.out.println("Choose: \n a: defense     b: attack");
-                choiceToFight = scanner.nextLine();
-                switch (choiceToFight) {
-                    case "b":
-                        if (this.getRace().equals("Mage")) {
-                            enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getIntelligence());
-                        } else {
-                            enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getStrength());
-                        }
-                        break;
-                    case "a":
-                        if (this.getDefense() + 2 < enemy.getStrength() | this.getDefense() + 2 < enemy.getIntelligence()) {
-                            if (enemy.getRace().equals("Mage")) {
-                                this.setHealth(this.getHealth() + this.getDefense() + 2 - enemy.getIntelligence());
-                            } else {
-                                this.setHealth(this.getHealth() + this.getDefense() + 2 - enemy.getStrength());
-                            }
-                        } else if (this.getDefense() < enemy.getStrength() | this.getDefense() < enemy.getIntelligence()) {
-                            if (enemy.getRace().equals("Mage")) {
-                                this.setHealth(this.getHealth() + this.getDefense() + 1 - enemy.getIntelligence());
-                            } else {
-                                this.setHealth(this.getHealth() + this.getDefense() + 1 - enemy.getStrength());
-                            }
-                        }
-                        break;
-                    default:
-                        System.out.println("You typed wrong, automatically turning your move to enemy...");
-                        break;
-                }
-            }
-
             if (enemy.getHealth() <= 0 & this.getHealth() > 0){
                 System.out.println("You won the fight!");
                 if (enemy.getLevel() > this.getLevel()){
@@ -230,17 +229,74 @@ public abstract class Character implements AbstractCharacter{
                     this.setXp(this.getXp() + 10 * enemy.getLevel());
                 }
                 this.openCase();
+                break;
             } else if (this.getHealth() <= 0 & enemy.getHealth() > 0){
                 System.out.println("You lost!");
                 System.out.println("You earned " + 5*enemy.getLevel() + "xp");
                 this.setXp(this.getXp() + 5 * enemy.getLevel());
+                break;
+            }
+
+            if (variable % 2 == 0) {
+                System.out.println("Your turn!\n");
+                System.out.println("Choose: \n a: defense     b: attack");
+                choiceToFight = scanner.nextLine();
+                switch (choiceToFight) {
+                    case "b":
+                        //critical damage chance 20%
+                        if (critChance <= 2){
+                            if (this.getRace().equals("Mage")) {
+                                System.out.println("Critical damage!");
+                                enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getIntelligence()*2);
+                            } else {
+                                System.out.println("Critical damage!");
+                                enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getStrength()*2);
+                            }
+                        } else {
+                            if (this.getRace().equals("Mage")) {
+                                enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getIntelligence());
+                            } else {
+                                enemy.setHealth(enemy.getHealth() + enemy.getDefense() - this.getStrength());
+                            }
+                        }
+                        break;
+                    case "a":
+                        if (this.getDefense() + 2 <= enemy.getStrength() | this.getDefense() + 2 <= enemy.getIntelligence()) {
+                            if (enemy.getRace().equals("Mage")) {
+                                this.setHealth(this.getHealth() + this.getDefense() + 2 - enemy.getIntelligence());
+                            } else {
+                                this.setHealth(this.getHealth() + this.getDefense() + 2 - enemy.getStrength());
+                            }
+                        } else if (this.getDefense() + 1 >= enemy.getStrength() | this.getDefense() + 1 >= enemy.getIntelligence()) {
+                            if (enemy.getRace().equals("Mage")) {
+                                this.setHealth(this.getHealth() + this.getDefense() + 1 - enemy.getIntelligence());
+                            } else {
+                                this.setHealth(this.getHealth() + this.getDefense() + 1 - enemy.getStrength());
+                            }
+                        }
+                        break;
+                    default:
+                        System.out.println("You typed wrong, automatically turning your move to enemy...");
+                        break;
+                }
             }
 
             if (variable % 2 != 0){
-                if (enemy.getRace().equals("Mage")){
-                    this.setHealth(this.getHealth() + this.getDefense() - enemy.getIntelligence());
+                System.out.println("Enemy's turn!\n");
+                if (enemyCritChance <= 2){
+                    if (enemy.getRace().equals("Mage")) {
+                        System.out.println("Critical damage from an enemy!");
+                        this.setHealth(this.getHealth() + this.getDefense() - enemy.getIntelligence()*2);
+                    } else {
+                        System.out.println("Critical damage from an enemy!");
+                        this.setHealth(this.getHealth() + this.getDefense() - enemy.getStrength()*2);
+                    }
                 } else {
-                    this.setHealth(this.getHealth() + this.getDefense() - enemy.getStrength());
+                    if (enemy.getRace().equals("Mage")) {
+                        this.setHealth(this.getHealth() + this.getDefense() - enemy.getIntelligence());
+                    } else {
+                        this.setHealth(this.getHealth() + this.getDefense() - enemy.getStrength());
+                    }
                 }
             } else if (!choiceToFight.equals("a") & !choiceToFight.equals("b")){
                 if (enemy.getRace().equals("Mage")){
@@ -263,6 +319,36 @@ public abstract class Character implements AbstractCharacter{
             if (randChance > 85 & randChance <= 92) this.getInventory().add("bronze sword");    //7%
             if (randChance > 92 & randChance <= 97) this.getInventory().add("iron sword");      //5%
             if (randChance > 97) this.getInventory().add("gold sword");                         //3%
+        }
+        if (this.getLevel() >= 16 & this.getLevel() <= 30){
+            if (randChance <= 50) this.getInventory().add("wooden sword");                      //50%
+            if (randChance > 50 & randChance <= 80) this.getInventory().add("bronze sword");    //30%
+            if (randChance > 80 & randChance <= 95) this.getInventory().add("iron sword");      //15%
+            if (randChance > 95) this.getInventory().add("gold sword");                         //5%
+        }
+        if (this.getLevel() >= 31 & this.getLevel() <= 45){
+            if (randChance <= 30) this.getInventory().add("wooden sword");                      //30%
+            if (randChance > 30 & randChance <= 70) this.getInventory().add("bronze sword");    //40%
+            if (randChance > 70 & randChance <= 90) this.getInventory().add("iron sword");      //20%
+            if (randChance > 90) this.getInventory().add("gold sword");                         //10%
+        }
+        if (this.getLevel() >= 46 & this.getLevel() <= 60){
+            if (randChance <= 15) this.getInventory().add("wooden sword");                      //15%
+            if (randChance > 15 & randChance <= 61) this.getInventory().add("bronze sword");    //46%
+            if (randChance > 61 & randChance <= 87) this.getInventory().add("iron sword");      //26%
+            if (randChance > 87) this.getInventory().add("gold sword");                         //13%
+        }
+        if (this.getLevel() >= 61 & this.getLevel() <= 75){
+            if (randChance <= 5) this.getInventory().add("wooden sword");                      //5%
+            if (randChance > 5 & randChance <= 55) this.getInventory().add("bronze sword");    //50%
+            if (randChance > 55 & randChance <= 85) this.getInventory().add("iron sword");     //30%
+            if (randChance > 85) this.getInventory().add("gold sword");                        //15%
+        }
+        if (this.getLevel() >= 76 & this.getLevel() <= 100){
+            if (randChance <= 1) this.getInventory().add("wooden sword");                      //1%
+            if (randChance > 1 & randChance <= 36) this.getInventory().add("bronze sword");    //35%
+            if (randChance > 36 & randChance <= 71) this.getInventory().add("iron sword");     //35%
+            if (randChance > 71) this.getInventory().add("gold sword");                        //29%
         }
     }
 
@@ -325,7 +411,7 @@ public abstract class Character implements AbstractCharacter{
         this.setXpToNextLvl(this.getXpToNextLvl()+200);
         trainingCompleted = false;
         if (xpToNext != 0){
-            System.out.println("Level up! You are now at " + this.getLevel() + " level" + "\nNow you have +1 Strength, +5 health and +1 defense");
+            System.out.println("Level up! You are now at " + this.getLevel() + " level " + "\nNow you have +1 Strength(Intelligence), +2 health and +1 defense");
         }
     }
 

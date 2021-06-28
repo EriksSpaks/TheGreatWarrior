@@ -14,6 +14,7 @@ public class Main{
         Scanner scanner = new Scanner(System.in);
         Character character;
         Game game = new Game();
+        World world = new World();
         System.out.println("Welcome to my rpg project!");
         System.out.println("First of all, create path to your saves:");
         SAVESPATH = scanner.nextLine();
@@ -36,7 +37,7 @@ public class Main{
         while(true){
             if (loadOrNewGame.equals("a")){
                 if (!areSavesEmpty(SAVESPATH)){
-                    character = game.loadCharacter(SAVESPATH, scanner);
+                    character = game.loadCharacter(SAVESPATH, scanner, world);
                     character.setInventory(game.loadInventory(SAVESPATH, character));
                     break;
                 }
@@ -68,18 +69,22 @@ public class Main{
         }
 
         //TODO game logics and game AND rewrite code below normally
-        World world = new World();
         boolean gameGoes = true;
         String save;
         String quitOrContinue;
         Random rand = new Random();
         while (gameGoes){
-
+            System.out.println("Do you want to check your inventory?(every input except 'a' will automatically skip action)");
+            System.out.println("a: Yes     b: no");
+            String checkInv = scanner.nextLine();
+            if (checkInv.equals("a")){
+                int[] inventory = character.checkInventory(1);
+            }
             //TODO game
             System.out.println("Day " + world.getDay());
             Character enemy = makeEnemy(character, rand);
             System.out.println("What do you want to do?");
-            System.out.println("a: training     b: fight with enemy(" + enemy.getLevel() + " lvl)");
+            System.out.println("a: Training     b: Fight with enemy(" + enemy.getLevel() + " lvl)    c: Skip day");
             String thisDayAction = scanner.nextLine();
             switch (thisDayAction){
                 case "a":
@@ -87,6 +92,8 @@ public class Main{
                     break;
                 case "b":
                     character.fight(enemy, scanner);
+                    break;
+                case "c":
                     break;
                 default:
                     System.out.println("Wrong action. Skipping the day...");

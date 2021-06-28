@@ -237,7 +237,7 @@ public class Game {
         return inventory;
     }
 
-    public Character loadCharacter(String path, Scanner scanner) throws IOException, ParseException, NullPointerException{
+    public Character loadCharacter(String path, Scanner scanner, World world) throws IOException, ParseException, NullPointerException{
         String[] pathNames;
         File f = new File(path);
         FilenameFilter filter = (f1, name) -> name.endsWith(".json");
@@ -258,7 +258,6 @@ public class Game {
         }
 
         Character character = new Warrior("", name.get(characterNumber-1).replace(".json", ""), "Warrior");
-        World world = new World();
 
         Object obj = new JSONParser().parse(new FileReader(path + name.get(characterNumber-1)));
         JSONObject jsonObject = (JSONObject) obj;
