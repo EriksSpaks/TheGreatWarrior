@@ -68,6 +68,8 @@ public class Game {
 
         Element itemWand = doc.createElement("weapon");
 
+        Element itemShield = doc.createElement("defense");
+
         for (int i = 0; i< character.getInventory().size(); i++){
             if (character.getInventory().get(i).contains("sword")){
                 rootElement.appendChild(itemSword);
@@ -77,6 +79,9 @@ public class Game {
             }
             if (character.getInventory().get(i).contains("wand")){
                 rootElement.appendChild(itemWand);
+            }
+            if (character.getInventory().get(i).contains("shield")){
+                rootElement.appendChild(itemShield);
             }
         }
 
@@ -180,6 +185,39 @@ public class Game {
                         character.getInventory().remove(0);
                         break;
                 }
+            } else if (character.getInventory().get(0).contains("shield")){
+                switch (character.getInventory().get(0)){
+                    case "wooden shield":
+                        Element shield = doc.createElement("shield");
+                        shield.setTextContent("wooden shield");
+                        itemShield.appendChild(shield);
+                        character.getInventory().remove(0);
+                        break;
+                    case "bronze wand":
+                        shield = doc.createElement("shield");
+                        shield.setTextContent("bronze shield");
+                        itemShield.appendChild(shield);
+                        character.getInventory().remove(0);
+                        break;
+                    case "iron shield":
+                        shield = doc.createElement("shield");
+                        shield.setTextContent("iron shield");
+                        itemShield.appendChild(shield);
+                        character.getInventory().remove(0);
+                        break;
+                    case "gold shield":
+                        shield = doc.createElement("shield");
+                        shield.setTextContent("gold shield");
+                        itemShield.appendChild(shield);
+                        character.getInventory().remove(0);
+                        break;
+                    case "legendary shield":
+                        shield = doc.createElement("shield");
+                        shield.setTextContent("legendary shield");
+                        itemShield.appendChild(shield);
+                        character.getInventory().remove(0);
+                        break;
+                }
             }
         }
 
@@ -233,7 +271,19 @@ public class Game {
                 }
             }
         }
-
+        items = doc.getElementsByTagName("defense");
+        for (int i = 0; i < items.getLength(); i++) {
+            Node item = items.item(i);
+            NodeList equipment = item.getChildNodes();
+            String temp = equipment.item(1).getTextContent();
+            for (int j = 0; j < equipment.getLength(); j++) {
+                if (temp.contains("shield") & equipment.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                    Element shield = (Element) equipment.item(j);
+                    String shieldName = shield.getTextContent();
+                    inventory.add(shieldName);
+                }
+            }
+        }
         return inventory;
     }
 
