@@ -16,7 +16,7 @@ public class Main{
         Game game = new Game();
         World world = new World();
         System.out.println("Welcome to my rpg project!");
-        System.out.println("First of all, create path to your saves:");
+        System.out.println("First of all, create path to your saves(or if you have your save files,\n write full path to your directory, where your character is saved):");
         SAVESPATH = scanner.nextLine();
         File savesFile = new File(SAVESPATH);
         //Checking if path to saves is valid
@@ -73,12 +73,45 @@ public class Main{
         String save;
         String quitOrContinue;
         Random rand = new Random();
+
         while (gameGoes){
+            if (!character.isItemAdded){
+//                switch (character.getRace()){
+//                    case "Mage":
+//                        if (character.getInventory().contains("legendary wand")){
+//                            character.setIntelligence(character.getIntelligence() + character.getLevel() + character.getDefense() + 10);
+//                            character.isItemAdded = true;
+//                            break;
+//                        }
+//                        if (character.getInventory().contains("gold wand")){
+//                            character.setIntelligence(character.getIntelligence() + character.getLevel() + 6);
+//                            character.isItemAdded = true;
+//                            break;
+//                        }
+//                        if (character.getInventory().contains("iron wand")){
+//                            character.setIntelligence(character.getIntelligence() + character.getLevel() + 3);
+//                            character.isItemAdded = true;
+//                            break;
+//                        }
+//                        if (character.getInventory().contains("bronze wand")){
+//                            character.setIntelligence(character.getIntelligence() + 2);
+//                            character.isItemAdded = true;
+//                            break;
+//                        }
+//                        if (character.getInventory().contains("wooden wand")){
+//                            character.setIntelligence(character.getIntelligence() + 1);
+//                            character.isItemAdded = true;
+//                            break;
+//                        }
+//                    case "Warrior":
+//                    case "Ranger":
+//                }
+            }
             System.out.println("Do you want to check your inventory?(every input except 'a' will automatically skip action)");
             System.out.println("a: Yes     b: no");
             String checkInv = scanner.nextLine();
             if (checkInv.equals("a")){
-                int[] inventory = character.checkInventory(1);
+                character.checkInventory(1);
             }
             //TODO game
             System.out.println("Day " + world.getDay());
